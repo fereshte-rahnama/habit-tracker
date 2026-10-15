@@ -40,6 +40,7 @@ weekDays.forEach((day,index)=>{
     dayEl.classList.add('day-card');
     if(date.toDateString() === today.toDateString()){
         dayEl.classList.add('active');
+        
     }
 
     dayEl.innerHTML= `<span class='day-name'>${day}</span>
@@ -47,4 +48,16 @@ weekDays.forEach((day,index)=>{
 
     weekDayEl.appendChild(dayEl);
 });
+
+const weeklyProgressEl=document.querySelector('.weekly-chart-progress')
+let dayComplete=6;
+let allDays=7;
+
+function progressPerWeek(){
+    let progress=(dayComplete / allDays) * 100;
+    weeklyProgressEl.style.width=`${progress}%`;
+}
+
+progressPerWeek();
+
 
