@@ -145,7 +145,7 @@ body{
     left: 55px;
 }
 .weekly-chart-progress{
-    width: 90%;
+    width: 0%;
     height: 10px;
     background-color: rgb(72, 72, 241);
     border-radius: 5px;
@@ -177,6 +177,13 @@ body{
     margin-left: 18px;
     margin-right: 22px;
 }
+.weekly-progress {
+    position: absolute;
+    top: 52%;
+    left: 52%;
+    color: var(--text-primary);
+    font-weight: bold;
+}
 div .active{
     padding: 5px 10px;
     border-radius: 5px;
@@ -192,9 +199,101 @@ div .active{
     background-color: var(--green-light);
     cursor: pointer;
     transition: all 0.2 ease;
+    color: var(--blue);
+    font-weight: bold;
 }
 .add-habit:hover{
     background-color: var(--green);
+}
+.modal-overlay{
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999999;
+}
+.hidden{
+    display: none;
+}
+.habit-modal{
+    width: 400px;
+    height: auto;
+    background-color: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow:var(--shadow);
+    z-index: 10000;
+}
+.habit-modal h2{
+    font-size: 24px;
+    color: var(--text-primary);
+    padding-bottom: 25px;
+}
+.habit-modal label{
+    font-size: 16px;
+    color: var(--text-primary);
+    
+}
+.habit-modal input{
+    width: 100%;
+    height: 40px;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    margin-top: 10px;
+}
+.habit-modal input:focus{
+    border-color: var(--green);
+    box-shadow: 0 0 0 1px rgba(197, 226, 200, 0.35);
+    outline: none;
+}
+.habit-colors{
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.habit-colors label{
+    font-size: 16px;
+    color: var(--text-primary);
+}
+.habit-colors input{
+    height: 45px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background-color: white;
+    cursor: pointer;
+}
+.modal-actions{
+    display: flex;
+    justify-content: left;
+    gap: 20px;
+    margin-top: 25px;
+}
+.modal-actions button{
+    width: 80px;
+    height: 40px;
+    border-radius: 10px;
+    font-size: 14px;
+    color: white;
+    border: var(--border);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+.canceltBtn{
+    background-color: rgb(240, 38, 38);
+}
+.canceltBtn:hover{
+    background-color: red;
+}
+.addBtn{
+    background-color: rgb(5, 170, 5);
+}
+.addBtn:hover{
+    background-color: green;
 }
 /* start weekly habit section */
 .weekly-habits {
@@ -203,7 +302,6 @@ div .active{
     padding-top: 30px;
     width: 750px;
     height: 250px;
-    background-color: yellow;
     display: flex;
     flex-direction: column;
     border-radius: 10px;
@@ -211,32 +309,42 @@ div .active{
     top: 70%;
 }
 .week-header{
-    margin-left: 20%;
+    display: grid;
+    grid-template-columns: 20px 150px repeat(7, minmax(0, 1fr));
+    align-items: center;
+    padding-bottom: 20px;
 }
 .week-header span{
-    display: inline-block;
-    padding: 25px;
     font-size: 16px;
+    text-align: center;
+    color: var(--text-primary);
 }
 .habit-items{
     display: grid;
-    grid-template-columns: 20px 130px 1fr ;
+    grid-template-columns: 20px 150px repeat(7, minmax(0, 1fr)) ;
     align-items: center;
+    padding-bottom: 20px;
+    
 }
 .habit-name{
     color: var(--text-primary);
     font-size: 16px;
 }
 .habit-days{
-    display: flex;
-    justify-content: space-evenly;
+    grid-column: 3 / 10;
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    justify-items: center;
     align-items: center;
+    
 }
-.habit-done{
-    width: 25px;
-    height: 25px;
+.habit-day{
+    width: 30px;
+    height: 30px;
     border-radius: 5px;
     border: 1px solid var(--border);
+    background-color: white;
+    cursor: pointer;
 }
 .habit-dot-pink{
     width: 10px;
@@ -255,6 +363,18 @@ div .active{
     height: 10px;
     background-color: var(--green);
     border-radius: 50px;
+}
+.habit-items:has(.habit-dot-pink) .habit-day.habit-done {
+    background-color: var(--pink);
+    border-color: var(--pink);
+}
+.habit-items:has(.habit-dot-blue) .habit-day.habit-done {
+    background-color: var(--blue);
+    border-color: var(--blue);
+}
+.habit-items:has(.habit-dot-green) .habit-day.habit-done {
+    background-color: var(--green);
+    border-color: var(--green);
 }
 /* end weekly habit section */
 

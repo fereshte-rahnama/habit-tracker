@@ -50,7 +50,7 @@ weekDays.forEach((day,index)=>{
 });
 
 const weeklyProgressEl=document.querySelector('.weekly-chart-progress')
-let dayComplete=6;
+let dayComplete;
 let allDays=7;
 
 function progressPerWeek(){
@@ -61,3 +61,59 @@ function progressPerWeek(){
 progressPerWeek();
 
 
+
+//  end calendar
+
+// start habit complete
+
+const habitDayBtn =document.querySelectorAll('.habit-day')
+const weeklyChartEl=document.querySelector('.weekly-chart')
+const weeklyPercentage=document.querySelector('.weekly-progress')
+    
+
+habitDayBtn.forEach((button)=>{
+    button.addEventListener('click',()=>{
+        button.classList.toggle('habit-done')
+        updateWeeklyProgress();
+        
+    })
+    
+})
+
+// start update chart with habit done
+
+
+function updateWeeklyProgress(){
+    const habitCompleteBtns=document.querySelectorAll('.habit-day.habit-done')
+    let avgDayComplete;
+
+    avgDayComplete=(habitCompleteBtns.length / 21) * 100;
+    weeklyProgressEl.style.width = `${avgDayComplete}%`;
+    weeklyPercentage.innerHTML=`${Math.round(avgDayComplete)}% completed`
+
+}
+updateWeeklyProgress();
+// end update chart with habit done
+
+// start add habit
+const modalOverlayEl=document.querySelector('.modal-overlay')
+const addHabitBtn = document.querySelector('.add-habit')
+const addBtn=document.querySelector('.addBtn')
+const cancelBtn=document.querySelector('.canceltBtn')
+const habitName=document.querySelector('#add-habit-name')
+const habitColor=document.querySelector('#habit-color')
+
+
+
+addHabitBtn.addEventListener('click',()=>{
+    modalOverlayEl.classList.remove('hidden')
+})
+cancelBtn.addEventListener('click',()=>{
+    modalOverlayEl.classList.add('hidden')
+})
+
+addBtn.addEventListener('click',()=>{
+    if(habitName.value.trim()!==''){
+
+    }
+})
