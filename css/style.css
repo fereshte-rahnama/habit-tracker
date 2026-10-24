@@ -295,6 +295,12 @@ div .active{
 .addBtn:hover{
     background-color: green;
 }
+.habit-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+}
 /* start weekly habit section */
 .weekly-habits {
     margin-top: 10px;
@@ -375,6 +381,10 @@ div .active{
 .habit-items:has(.habit-dot-green) .habit-day.habit-done {
     background-color: var(--green);
     border-color: var(--green);
+}
+.habit-items .habit-day.habit-done {
+    background-color: var(--habit-color);
+    border-color: var(--habit-color);
 }
 /* end weekly habit section */
 
