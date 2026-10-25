@@ -53,6 +53,25 @@ const weeklyProgressEl=document.querySelector('.weekly-chart-progress')
 
 //  end calendar
 
+// show date in right panel
+const dailyDateEl = document.querySelector('#daily-date');
+
+const previousDayBtn = document.querySelector('#previous-day');
+const nextDayBtn = document.querySelector('#next-day');
+
+let selectedDate = new Date();
+
+function updateDailyDate() {
+    dailyDateEl.textContent = selectedDate.toLocaleDateString('en-US', {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric'
+    });
+}
+
+updateDailyDate();
+
+
 // start habit complete
 
 const habitDayBtn =document.querySelectorAll('.habit-day')
@@ -159,6 +178,46 @@ habits.forEach((habit) => {
     renderHabit(habit)
 })
 updateWeeklyProgress()
+renderDailyHabits()
+
+
+function renderDailyHabits() {
+    const dailyHabitsEl = document.querySelector('.daily-habits');
+
+    dailyHabitsEl.innerHTML = '';
+
+    const dayIndex = (selectedDate.getDay() + 6) % 7;
+
+    habits.forEach((habit) => {
+        const card = document.createElement('div');
+        card.classList.add('daily-habit-card');
+
+        const name = document.createElement('span');
+        name.classList.add('daily-habit-name');
+        name.textContent = habit.name;
+
+        const colorBar = document.createElement('span');
+        colorBar.classList.add('daily-habit-color');
+        colorBar.style.backgroundColor = habit.color;
+
+        const info = document.createElement('div');
+        info.classList.add('daily-habit-info');
+
+        info.append(colorBar, name);
+        card.appendChild(info);
+
+        const status = document.createElement('span');
+        status.classList.add('daily-habit-status');
+
+        status.textContent = habit.days[dayIndex]
+            ? 'Completed'
+            : 'Not completed';
+
+        card.appendChild(status);
+        dailyHabitsEl.appendChild(card);
+    });
+}
+
 
 // Add a new habit
 addBtn.addEventListener('click', () => {
@@ -174,6 +233,7 @@ addBtn.addEventListener('click', () => {
 
         renderHabit(newHabit)
         updateWeeklyProgress()
+        renderDailyHabits();
 
         habitName.value = ''
         modalOverlayEl.classList.add('hidden')

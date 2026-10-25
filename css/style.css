@@ -102,12 +102,19 @@ body{
 /* end section sidebar */
 
 /* start section weekly tracker */
+.center-content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
 .main-content {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    width: 100%;
     gap: 20px;
-    width: calc(100% - 150px);
     position: relative;
 }
 .weekly-tracker{
@@ -124,33 +131,32 @@ body{
     color: var(--text-primary);
 }
 .weekly-tracker p{
-    font-size: 28px;
+    font-size: 24px;
     color: var(--text-secondary);
+    padding-bottom: 10px;
 }
-.weekly-calendar{
+.weekly-calendar {
     width: 750px;
     height: 250px;
     background-color: var(--green);
     border-radius: 10px;
-    margin-top: 10px;
     position: relative;
 }
-.weekly-chart{
+.weekly-chart {
     width: 85%;
     height: 10px;
     background-color: rgb(204, 200, 200);
     border-radius: 5px;
     position: absolute;
-    top: 80px;
+    top: 70px;
     left: 55px;
+    overflow: hidden;
 }
-.weekly-chart-progress{
+.weekly-chart-progress {
+    height: 100%;
     width: 0%;
-    height: 10px;
     background-color: rgb(72, 72, 241);
     border-radius: 5px;
-    top: 80px;
-    left: 55px;
 }
 #week-range{
     margin: 20px 20px;
@@ -161,8 +167,8 @@ body{
     display: flex;
     gap: 15px;
     position: absolute;
-    margin-top: 17%;
-    margin-left: 3%;
+    margin-top: 22%;
+    margin-left: 4.5%;
     background-color: white;
     padding: 20px;
     border-radius: 10px;
@@ -179,8 +185,8 @@ body{
 }
 .weekly-progress {
     position: absolute;
-    top: 52%;
-    left: 52%;
+    top: 70%;
+    left: 68%;
     color: var(--text-primary);
     font-weight: bold;
 }
@@ -303,16 +309,14 @@ div .active{
 }
 /* start weekly habit section */
 .weekly-habits {
-    margin-top: 10px;
-    margin-left: 14.5%;
+    margin:10px 0 0 4%;
     padding-top: 30px;
     width: 750px;
     height: 250px;
     display: flex;
     flex-direction: column;
     border-radius: 10px;
-    position: absolute;
-    top: 70%;
+    position: static;
 }
 .week-header{
     display: grid;
@@ -387,5 +391,147 @@ div .active{
     border-color: var(--habit-color);
 }
 /* end weekly habit section */
+
+/* start right panel */
+.daily-panel {
+    width: 210px;
+    min-width: 310px;
+    min-height: 100vh;
+    flex-shrink: 0;
+    padding: 30px 20px;
+    background-color: var(--bg-card);
+    border-left: 1px solid var(--border);
+}
+
+.daily-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.daily-header h2 {
+    font-size: 22px;
+    color: var(--text-primary);
+}
+
+.daily-navigation {
+    display: flex;
+    gap: 8px;
+}
+
+.daily-navigation button {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background-color: var(--bg-card);
+    cursor: pointer;
+    font-size: 20px;
+    transition: background-color 0.2s ease;
+}
+
+.daily-navigation button:hover {
+    background-color: var(--green-light);
+}
+
+.daily-progress {
+    margin-bottom: 25px;
+}
+
+.daily-progress-bar {
+    width: 100%;
+    height: 10px;
+    background-color: var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.daily-progress-fill {
+    width: 0%;
+    height: 100%;
+    background-color: var(--blue);
+    border-radius: 10px;
+    transition: width 0.3s ease;
+}
+
+.daily-progress-text {
+    margin-top: 10px;
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.daily-habits {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.daily-habit-card {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 16px;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+}
+
+.daily-habit-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.daily-habit-color {
+    width: 5px;
+    min-height: 45px;
+    align-self: stretch;
+    border-radius: 5px;
+}
+
+.daily-habit-name {
+    flex: 1;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.daily-habit-menu {
+    border: none;
+    background: transparent;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.daily-habit-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.daily-habit-status {
+    padding: 6px 10px;
+    border-radius: 15px;
+    background-color: var(--green-light);
+    color: var(--text-primary);
+    font-size: 12px;
+}
+
+.daily-habit-undo {
+    border: none;
+    background: transparent;
+    color: var(--blue);
+    cursor: pointer;
+    font-size: 13px;
+}
+
+
+
+
 
 /* end section weekly tracker */
