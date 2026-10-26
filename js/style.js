@@ -4,9 +4,13 @@ userNameEl.textContent ='Guest';
 
 // start calendar
 
+
 const weekRangeEl=document.querySelector('#week-range')
 const weekDayEl=document.querySelector('#week-days')
 const today=new Date();
+
+
+
 
 const currentDay= today.getDay();
 let difference;
@@ -58,6 +62,22 @@ const dailyDateEl = document.querySelector('#daily-date');
 
 const previousDayBtn = document.querySelector('#previous-day');
 const nextDayBtn = document.querySelector('#next-day');
+
+previousDayBtn.addEventListener('click', () => {
+    selectedDate.setDate(selectedDate.getDate() - 1);
+
+    updateDailyDate();
+    renderDailyHabits();
+    updateDailyProgress();
+});
+
+nextDayBtn.addEventListener('click', () => {
+    selectedDate.setDate(selectedDate.getDate() + 1);
+
+    updateDailyDate();
+    renderDailyHabits();
+    updateDailyProgress();
+});
 
 let selectedDate = new Date();
 
@@ -124,17 +144,38 @@ cancelBtn.addEventListener('click',()=>{
     modalOverlayEl.classList.add('hidden')
 })
 
-let habits = JSON.parse(localStorage.getItem('habits')) || []
 
-// Add days to older habits that don't have them
+function getDateKey(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+}
+
+let habits = JSON.parse(localStorage.getItem('habits')) || [];
+
 habits.forEach((habit) => {
-    if (!habit.days) {
-        habit.days = [false, false, false, false, false, false, false]
+    if (!habit.completedDates) {
+        habit.completedDates = {};
+
+        if (Array.isArray(habit.days)) {
+            habit.days.forEach((isDone, index) => {
+                if (isDone) {
+                    const date = new Date(monday);
+                    date.setDate(monday.getDate() + index);
+
+                    habit.completedDates[getDateKey(date)] = true;
+                }
+            });
+        }
     }
-})
 
+    delete habit.days;
+});
 
-localStorage.setItem('habits', JSON.stringify(habits))
+localStorage.setItem('habits', JSON.stringify(habits));
+
 
 function renderHabit(habit) {
     const addDivEl = document.createElement('div')
@@ -158,20 +199,31 @@ function renderHabit(habit) {
     addHabitDays.classList.add('habit-days')
     addDivEl.appendChild(addHabitDays)
 
-    for (let i = 0; i < 7; i++) {
-        const addHabitBtn = document.createElement('button')
-        addHabitBtn.classList.add('habit-day')
+for (let i = 0; i < 7; i++) {
+    const addHabitBtn = document.createElement('button');
+    addHabitBtn.classList.add('habit-day');
 
-        addHabitBtn.dataset.habitName = habit.name
-        addHabitBtn.dataset.dayIndex = i
+    addHabitBtn.dataset.habitName = habit.name;
+    addHabitBtn.dataset.dayIndex = i;
 
-        if (habit.days[i]) {
-            addHabitBtn.classList.add('habit-done')
-        }
+    const date = new Date(monday);
+    date.setDate(monday.getDate() + i);
 
-        addHabitDays.appendChild(addHabitBtn)
+    const dateKey = getDateKey(date);
+
+    if (habit.completedDates?.[dateKey]) {
+        addHabitBtn.classList.add('habit-done');
     }
+
+    addHabitDays.appendChild(addHabitBtn);
 }
+const deleteBtn = document.createElement('button');
+deleteBtn.classList.add('delete-habit');
+deleteBtn.textContent = '🗑️';
+
+addDivEl.appendChild(deleteBtn);
+    }
+
 
 // Display saved habits
 habits.forEach((habit) => {
@@ -179,6 +231,7 @@ habits.forEach((habit) => {
 })
 updateWeeklyProgress()
 renderDailyHabits()
+updateDailyProgress();
 
 
 function renderDailyHabits() {
@@ -206,27 +259,29 @@ function renderDailyHabits() {
         info.append(colorBar, name);
         card.appendChild(info);
 
-        const status = document.createElement('span');
-        status.classList.add('daily-habit-status');
+const status = document.createElement('span');
+status.classList.add('daily-habit-status');
 
-        status.textContent = habit.days[dayIndex]
-            ? 'Completed'
-            : 'Not completed';
+const dateKey = getDateKey(selectedDate);
+
+status.textContent = habit.completedDates?.[dateKey]
+    ? 'Completed'
+    : 'Not completed';
 
         card.appendChild(status);
-        dailyHabitsEl.appendChild(card);
-    });
+dailyHabitsEl.appendChild(card);
+});
 }
 
 
 // Add a new habit
 addBtn.addEventListener('click', () => {
     if (habitName.value.trim() !== '') {
-        const newHabit = {
-            name: habitName.value.trim(),
-            color: habitColor.value,
-            days: [false, false, false, false, false, false, false]
-        }
+const newHabit = {
+    name: habitName.value.trim(),
+    color: habitColor.value,
+    completedDates: {}
+};
 
         habits.push(newHabit)
         localStorage.setItem('habits', JSON.stringify(habits))
@@ -234,6 +289,7 @@ addBtn.addEventListener('click', () => {
         renderHabit(newHabit)
         updateWeeklyProgress()
         renderDailyHabits();
+        updateDailyProgress();
 
         habitName.value = ''
         modalOverlayEl.classList.add('hidden')
@@ -242,19 +298,80 @@ addBtn.addEventListener('click', () => {
 
 
 addWeeklyHabitsEl.addEventListener('click', (e) => {
+
+    
+if (e.target.classList.contains('delete-habit')) {
+    const habitRow = e.target.closest('.habit-items');
+    const habitName = habitRow.querySelector('.habit-name').textContent;
+
+    habits = habits.filter((habit) => habit.name !== habitName);
+
+    localStorage.setItem('habits', JSON.stringify(habits));
+
+    habitRow.remove();
+
+    renderDailyHabits();
+    updateWeeklyProgress();
+    updateDailyProgress();
+
+    return;
+}
+
     if (e.target.classList.contains('habit-day')) {
         const habitName = e.target.dataset.habitName
         const dayIndex = Number(e.target.dataset.dayIndex)
 
+        console.log(e.target.dataset);
+console.log(habits);
         const habit = habits.find((item) => item.name === habitName)
 
-        if (habit) {
-            habit.days[dayIndex] = !habit.days[dayIndex]
+if (habit) {
+    const date = new Date(monday);
+    date.setDate(monday.getDate() + dayIndex);
+    selectedDate = new Date(date);
 
-            e.target.classList.toggle('habit-done', habit.days[dayIndex])
+    const dateKey = getDateKey(date);
+    
+    if (!habit.completedDates) {
+    habit.completedDates = {};
+}
+    habit.completedDates[dateKey] = !habit.completedDates[dateKey];
 
-            localStorage.setItem('habits', JSON.stringify(habits))
-            updateWeeklyProgress()
-        }
+    e.target.classList.toggle(
+        'habit-done',
+        habit.completedDates[dateKey]
+    );
+
+    localStorage.setItem('habits', JSON.stringify(habits));
+
+    updateWeeklyProgress();
+    updateDailyDate();
+    renderDailyHabits();
+    updateDailyProgress();
+}
     }
 })
+
+// progress in right section
+
+
+function updateDailyProgress() {
+    const dateKey = getDateKey(selectedDate);
+
+    const completedHabits = habits.filter((habit) => {
+        return habit.completedDates?.[dateKey] === true;
+    }).length;
+
+    const totalHabits = habits.length;
+
+    const progress = totalHabits > 0
+        ? (completedHabits / totalHabits) * 100
+        : 0;
+
+    const progressFill = document.querySelector('.daily-progress-fill');
+    const progressText = document.querySelector('.daily-progress-text');
+
+    progressFill.style.width = `${progress}%`;
+    progressText.textContent =
+        `${Math.round(progress)}% of daily goal achieved`;
+}

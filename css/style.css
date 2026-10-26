@@ -329,12 +329,12 @@ div .active{
     text-align: center;
     color: var(--text-primary);
 }
-.habit-items{
+.habit-items {
     display: grid;
-    grid-template-columns: 20px 150px repeat(7, minmax(0, 1fr)) ;
+    grid-template-columns: 20px 150px repeat(7, minmax(0, 1fr));
     align-items: center;
     padding-bottom: 20px;
-    
+    position: relative;
 }
 .habit-name{
     color: var(--text-primary);
@@ -346,6 +346,18 @@ div .active{
     grid-template-columns: repeat(7, minmax(0, 1fr));
     justify-items: center;
     align-items: center;
+    
+}
+.delete-habit {
+    position: absolute;
+    left: 100%;
+    margin-left: 10px;
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    top: -3px;
     
 }
 .habit-day{
